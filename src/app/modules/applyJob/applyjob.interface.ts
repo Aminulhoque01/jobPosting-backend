@@ -11,5 +11,6 @@ export interface IJobApplication extends Document {
     coverLetter: string;
     whyFitForRole: string;
     createdAt: Date;
+    shortlisted:boolean;
     appliedDate:Date
 }

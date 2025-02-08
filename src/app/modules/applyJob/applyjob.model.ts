@@ -12,7 +12,8 @@ const JobApplicationSchema = new Schema<IJobApplication>(
         resume: { type: String,  },
         coverLetter: { type: String, },
         whyFitForRole: { type: String,  },
-        appliedDate: { type: Date, default: Date.now }
+        appliedDate: { type: Date, default: Date.now },
+        shortlisted: { type: Boolean, default: false } 
     },
     { timestamps: true }
 );

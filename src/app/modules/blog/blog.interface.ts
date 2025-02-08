@@ -3,6 +3,6 @@ export interface IBlog {
     content: string;
     featureImage?: string;
     category: string;
-    tag: string[];
+    tag: string;
     createdAt: Date
   }

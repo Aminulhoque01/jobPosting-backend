@@ -6,7 +6,7 @@ import { Job } from "./job.model";
 import { JobApplication } from "../applyJob/applyjob.model";
 // import { JobModel } from "./job.module";
 
-const createJobs = async (jobData: string): Promise<IJob | null> => {
+const createJobs = async (jobData: string,): Promise<IJob> => {
     const result = await Job.create(jobData);
 
     return result;
@@ -43,11 +43,8 @@ const getSingleJob = async (jobId: string): Promise<IJob | null> => {
 };
 
 const updateJob = async (jobId: string, jobData: Partial<IJob>) => {
-    const job = await Job.findByIdAndUpdate(jobId, jobData, {
-        new: true, // Return the updated document
-        runValidators: true, // Ensure validation rules are applied
-    });
-    return job;
+    const updatedJob = await Job.findByIdAndUpdate(jobId, jobData, { new: true })
+    return updatedJob;
 };
 
 const deleteJob = async (jobId: string) => {
@@ -112,14 +109,40 @@ const removeSavedJob = async (jobId: string, userId: string) => {
     
 }
 
-const getAllApplicants = async()=>{
-    const jobs = await JobApplication.find().populate('applicant', 'fullName email profileImage');
 
-    // Collect all applicants (users who have applied for jobs)
-    
 
-    return jobs;
+const JobApplicationMember = async()=>{
+    const jobApplications = await Job.aggregate([
+        {
+            $lookup: {
+                from: "jobapplications", // Matches the collection name in MongoDB
+                localField: "_id",
+                foreignField: "jobId",
+                as: "applications"
+            }
+        },
+        {
+            $project: {
+                _id: 1,
+                title: 1,
+                applicationCount: { $size: "$applications" } // Count the applications
+            }
+        }
+    ]);
+
+    return jobApplications
+};
+
+// total job count 
+
+
+const totalJob = async()=>{
+    const total = await Job.countDocuments();
+
+    return total
 }
+
+
 
 export const jobService = {
     createJobs,
@@ -132,5 +155,8 @@ export const jobService = {
     getSavedJobs,
     removeSavedJob,
     deleteJob,
-    getAllApplicants
+    
+    JobApplicationMember,
+    totalJob,
+    
 }

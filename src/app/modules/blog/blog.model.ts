@@ -3,11 +3,11 @@ import { IBlog } from "./blog.interface";
 
 const postSchema = new Schema<IBlog>(
     {
-      title: { type: String, required: true },
-      content: { type: String, required: true },
+      title: { type: String, },
+      content: { type: String,  },
       featureImage: { type: String },
-      category: { type: String, required: true },
-      tag: { type: [String], required: true },
+      category: { type: String, },
+      tag: { type: String,  },
       
     },
     { timestamps: true }

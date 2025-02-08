@@ -9,15 +9,16 @@ const getAllBlog=async()=>{
     return await BlogModel.find();
 };
 
-const getSingleBlog=async(id:string)=>{
-    const result= await BlogModel.findById(id);
+const getSingleBlog = async (id: string) => {
+    if (!id) return null;
+
+    const result = await BlogModel.findById(id).lean(); // `lean()` converts it to a plain object
 
     return result;
 };
 
-const updateBlog = async(id:string, updatedData:Partial<IBlog>)=>{
-
-    const result= await BlogModel.findByIdAndUpdate(id, updatedData ,{new:true});
+const updateBlog = async (id: string, updatedData: Partial<IBlog>) => {
+    const result = await BlogModel.findByIdAndUpdate(id, updatedData, { new: true }); // `new: true` returns the updated document
     return result;
 };
 

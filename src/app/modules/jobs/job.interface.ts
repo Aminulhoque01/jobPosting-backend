@@ -5,7 +5,7 @@ export interface IJob {
     title: string;
     salary: string;
     company: string;
-    image: string;
+    image?: string;
     location: string;
     category: string;
     postedAt: string;
@@ -14,6 +14,7 @@ export interface IJob {
     workPlace:"Onsite" | "Remote";
     experinceLavel:string,
     expirationDate: Date;
+    
     createdAt: Date;
     applicants: string[];
     appliedDate:string[]

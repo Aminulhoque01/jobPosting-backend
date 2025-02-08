@@ -61,9 +61,100 @@ const getUserAppliedJobs = catchAsync(async (req: Request, res: Response): Promi
     });
 });
 
+// find all applied user 
+
+const jobAppliedUser = catchAsync(async(req:Request, res:Response)=>{
+    const applicants = await JobApplicationService.getAllApplicants();
+
+    return sendResponse(res, {
+        code: StatusCodes.OK,
+        message: 'get all applied candidate successfully.',
+        data: applicants,
+    });
+});
+
+
+// shortlist user 
+
+const shortlistUser = catchAsync(async(req:Request, res:Response)=>{
+    const id = req.params.id;
+
+    const shortlist = await JobApplicationService.shortlistUser(id);
+
+    return sendResponse(res, {
+        code: StatusCodes.OK,
+        message: 'get all applied candidate successfully.',
+        data: shortlist,
+    });
+});
+
+//reject user
+const creteReject = catchAsync(async(req:Request, res:Response)=>{
+    const id = req.params.id;
+
+    const shortlist = await JobApplicationService.creteReject(id);
+
+    return sendResponse(res, {
+        code: StatusCodes.OK,
+        message: 'application reject successfully.',
+        data: shortlist,
+    });
+});
+
+
+const getShortlist = catchAsync (async(req:Request, res:Response)=>{
+    const result = await JobApplicationService.getShortlist();
+
+    return sendResponse(res, {
+        code: StatusCodes.OK,
+        message: 'get all shortlist candidate successfully.',
+        data: result,
+    });
+});
+
+const totalShorlistUser = catchAsync(async(req:Request, res:Response)=>{
+    const result= await JobApplicationService.totalShorlistUser();
+
+    return sendResponse(res, {
+        code: StatusCodes.OK,
+        message: 'total shortlist candidate successfully.',
+        data: result,
+    });
+})
+
+
+const recentApplyedJob = catchAsync(async(req:Request, res:Response)=>{
+    const recentApplied= await JobApplicationService.recentAppliedJob();
+
+    sendResponse(res,{
+        code: StatusCodes.OK,
+        message: 'get all recent applied user successfully.',
+        data: recentApplied,
+    })
+});
+
+
+// total 
+
+const totalApplication =  catchAsync(async(req:Request, res:Response)=>{
+    const total = await JobApplicationService.totalAplicaiton();
+
+    sendResponse(res,{
+        code: StatusCodes.OK,
+        message: 'total applicaiton successfully.',
+        data: total, 
+    })
+})
 
 export const applyJobController = {
     applyJob,
     getUserAppliedJobs,
+    recentApplyedJob,
+    totalApplication,
+    jobAppliedUser,
+    shortlistUser,
+    getShortlist,
+    totalShorlistUser,
+    creteReject
 
 }

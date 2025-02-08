@@ -11,16 +11,32 @@ import { User } from "../user/user.model";
 import mongoose from "mongoose";
 
 const createJsob = catchAsync(async (req: Request, res: Response) => {
-    const { ...jobData } = req.body;
+    const jobData: any = {
+        title: req.body.title,
+        salary: req.body.salary,
+        company: req.body.company,
+        location: req.body.location,
+        description: req.body.description,
+        category: req.body.category,
+        employmentType: req.body.employmentType,
+        workPlace: req.body.workPlace,
+        experienceLevel: req.body.experienceLevel,
+        image: req.file?.path, // Save image file path
+    };
 
     const result = await jobService.createJobs(jobData);
     if (!result) {
         throw new Error("no job")
     }
+
+
+
+    // Add the image path to your jobData
+
     sendResponse<IJob>(res, {
         code: StatusCodes.OK,
         message: 'Job retrieved successfully',
-        data: result,
+        data: result
     })
 });
 
@@ -54,7 +70,7 @@ const recentJobs = catchAsync(async (req: Request, res: Response) => {
 
 
     const result = recentJobs.map(job => ({
-        ...job.toObject(),
+        ...job,
         posted: calculateTimeAgo(job.createdAt),
     }));
 
@@ -65,31 +81,45 @@ const recentJobs = catchAsync(async (req: Request, res: Response) => {
     });
 });
 
-const getSingleJob = catchAsync(async (req: Request, res: Response) => {
-    const id = req.params.id;
-    const job = await jobService.getSingleJob(id);
-    let posted = null;
-    if (job) {
-        posted = calculateTimeAgo(job.createdAt);
-    }
 
-    return sendResponse(res, {
+const getSingleJob = catchAsync(async (req: Request, res: Response): Promise<void> => {
+    const id = req.params.id;
+
+    const result = await jobService.getSingleJob(id);
+
+    sendResponse(res, {
         code: StatusCodes.OK,
-        message: 'Job retrieved successfully.',
-        data: {
-            ...job.toObject(),
-            posted, // Add the "time ago" to the response
-        },
-    });
+        message: 'Recent jobs retrieved successfully.',
+        data: result,
+    })
+
+
 });
+
+
+
+
+
+
+
 
 
 //update job 
 
 const updateJob = catchAsync(async (req: Request, res: Response) => {
-    const  jobId  = req.params.id;
+    const jobId = req.params.id;
     const jobData = req.body;
 
+
+
+    // If there's a new image, handle it
+    if (req.file) {
+        jobData.image = req.file.path;
+    }
+
+    if (req.file) {
+        jobData.image = `/uploads/users/${req.file.filename}`; // Save the file name in the featureImage field
+    }
     if (!mongoose.Types.ObjectId.isValid(jobId)) {
         return sendResponse(res, {
             code: StatusCodes.BAD_REQUEST,
@@ -115,8 +145,8 @@ const updateJob = catchAsync(async (req: Request, res: Response) => {
 
 // delete job 
 
-const deleteJob = catchAsync(async(req: Request, res: Response) => {
-    const {jobId}= req.body;
+const deleteJob = catchAsync(async (req: Request, res: Response) => {
+    const jobId = req.params.id;
     const job = await jobService.deleteJob(jobId);
 
     sendResponse(res, {
@@ -133,13 +163,13 @@ const applyForJob = catchAsync(async (req: Request, res: Response) => {
 
     const job = await Job.findById(jobId);
     const user = await User.findById(userId);
-    if( !user) {
+    if (!user) {
         throw new Error(' user not found');
     }
-    if( !job) {
+    if (!job) {
         throw new Error(' job not found');
     }
-    if (user.appliedJobs.includes(jobId)){
+    if (user.appliedJobs.includes(jobId)) {
         throw new Error('You have already applied for this job');
     }
     user.appliedJobs.push(jobId);
@@ -173,12 +203,12 @@ const saveForJob = catchAsync(async (req: Request, res: Response) => {
         throw new Error('Job not found');
     }
 
-    
+
 
     sendResponse(res, {
         code: StatusCodes.OK,
         message: 'Job saved successfully.',
-        data: result,  
+        data: result,
     });
 });
 
@@ -200,9 +230,9 @@ const getSavedJobs = catchAsync(async (req: Request, res: Response) => {
 const removeSavedJob = catchAsync(async (req: Request, res: Response) => {
     const { jobId } = req.body;
     const userId = req.user.id;
-   
-   const removeSavedJob= await jobService.removeSavedJob(jobId, userId);
-  
+
+    const removeSavedJob = await jobService.removeSavedJob(jobId, userId);
+
     return sendResponse(res, {
         code: StatusCodes.OK,
         message: 'Job removed from saved jobs successfully.',
@@ -211,18 +241,32 @@ const removeSavedJob = catchAsync(async (req: Request, res: Response) => {
 });
 
 
-// find all applied user 
 
-const jobAppliedUser = catchAsync(async(req:Request, res:Response)=>{
-    const applicants = await jobService.getAllApplicants();
+// user idefind jobs application
 
-    return sendResponse(res, {
+const JobApplicationMember = catchAsync(async (req: Request, res: Response) => {
+
+    const countUser = await jobService.JobApplicationMember();
+
+    sendResponse(res, {
         code: StatusCodes.OK,
         message: 'get all applied candidate successfully.',
-        data: applicants,
-    });
+        data: countUser,
+    })
 })
 
+
+//total job
+
+const totalJob = catchAsync(async (req: Request, res: Response) => {
+    const total = await jobService.totalJob();
+    sendResponse(res, {
+        code: StatusCodes.OK,
+        message: 'get all total job successfully.',
+        data: total,
+    })
+
+})
 
 
 
@@ -237,6 +281,8 @@ export const jobController = {
     getSavedJobs,
     removeSavedJob,
     deleteJob,
-    jobAppliedUser
+
+    JobApplicationMember,
+    totalJob
 }
 

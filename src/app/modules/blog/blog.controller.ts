@@ -38,28 +38,58 @@ const getAllBlog = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getSingleBlog = catchAsync(async (req: Request, res: Response) => {
-    const id = req.params.id;
+    const { id } = req.params;
+
+    if (!id) {
+        return sendResponse(res, {
+            code: StatusCodes.BAD_REQUEST,
+            message: "Blog ID is required.",
+            data: null,
+        });
+    }
 
     const result = await BlogService.getSingleBlog(id);
 
+    if (!result) {
+        return sendResponse(res, {
+            code: StatusCodes.NOT_FOUND,
+            message: "Blog not found.",
+            data: null,
+        });
+    }
+
     sendResponse(res, {
         code: StatusCodes.OK,
-        message: 'single job retrieved successfully.',
+        message: "Single blog retrieved successfully.",
         data: result,
-    })
+    });
 });
 
 const updateBlog = catchAsync(async (req: Request, res: Response) => {
-    const id = req.params.id;
-    const { updatedData } = req.body;
+    const id = req.params.id; // Get the blog ID from the route
+    const updatedData = req.body; // Contains the form data fields (title, content, etc.)
+
+    console.log("Updated data before update:", updatedData); // Log data to check
+
+    // If a new file (featureImage) is uploaded, add it to updatedData
+    if (req.file) {
+        updatedData.featureImage = `/uploads/users/${req.file.filename}`; // Save the file name in the featureImage field
+    }
+
+    // Call the BlogService to update the blog in the database
     const result = await BlogService.updateBlog(id, updatedData);
-    console.log(result)
+
+    console.log("Updated blog result:", result); // Log the updated result to check what's returned
+
+    // Return the updated data in the response
     sendResponse(res, {
         code: StatusCodes.OK,
-        message: ' jobs updated successfully.',
-        data: result,
-    })
+        message: 'Blog updated successfully.',
+        data: result, // Return the full updated blog data
+    });
 });
+
+
 
 const deleteBlog = catchAsync(async (req: Request, res: Response) => {
     const id = req.params.id;

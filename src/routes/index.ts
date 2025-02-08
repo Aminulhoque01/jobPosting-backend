@@ -11,6 +11,7 @@ import { patientRoute } from '../app/modules/patient/patient.route';
 import { jobRoutes } from '../app/modules/jobs/job.router';
 import { applicaitonJobRoutes } from '../app/modules/applyJob/apllyjob.router';
 import { BlogRoutes } from '../app/modules/blog/blog.route';
+import { FaqRoutes } from '../app/modules/faq/faq.router';
 const router = express.Router();
 
 const apiRoutes = [
@@ -45,6 +46,10 @@ const apiRoutes = [
   {
     path: '/blog',
     route: BlogRoutes,
+  },
+  {
+    path: '/faq',
+    route: FaqRoutes,
   },
   
   {
