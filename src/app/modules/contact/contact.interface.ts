@@ -2,9 +2,10 @@ import { Model } from 'mongoose';
 import { PaginateOptions, PaginateResult } from '../../../types/paginate';
 
 export interface IContact {
-  fullName: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  phoneNumber: string;
+  subject: string;
   message: string;
 }
 

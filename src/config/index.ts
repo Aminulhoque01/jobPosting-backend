@@ -94,6 +94,14 @@ export default {
     },
     from: envVars.data.EMAIL_FROM,
   },
+  mailchimp: {
+    apiKey: envVars.data.MAILCHIMP_API_KEY,
+    server: 'us8',
+  },
+  titan: {
+    email: 'rakib2020.tkg@gmail.com',
+    password: 'Rakib244348',
+  },
   backendIp: envVars.data.BACKEND_IP,
   stripe: {
     secretKey: envVars.data.STRIPE_SECRET_KEY,

@@ -11,6 +11,8 @@ import { User } from "../user/user.model";
 import mongoose from "mongoose";
 
 const createJsob = catchAsync(async (req: Request, res: Response) => {
+    
+
     const jobData: any = {
         title: req.body.title,
         salary: req.body.salary,
@@ -18,11 +20,12 @@ const createJsob = catchAsync(async (req: Request, res: Response) => {
         location: req.body.location,
         description: req.body.description,
         category: req.body.category,
-        employmentType: req.body.employmentType,
-        workPlace: req.body.workPlace,
-        experienceLevel: req.body.experienceLevel,
-        image: req.file?.path, // Save image file path
+        employmentType: req.body.employmentType || "",  // ✅ Ensure it is captured
+        workPlace: req.body.workPlace || "",  // ✅ Ensure it is captured
+        experinceLavel: req.body.experinceLavel,
+        image: req.file ? `/uploads/users/${req.file.filename}` : null, 
     };
+    
 
     const result = await jobService.createJobs(jobData);
     if (!result) {
@@ -41,29 +44,58 @@ const createJsob = catchAsync(async (req: Request, res: Response) => {
 });
 
 
+// const getAllJobs = catchAsync(async (req: Request, res: Response) => {
+//     const filters = pick(req.query, ["location", "category", "workPlace", "experienceLevel",]);
+//     const options = pick(req.query, ['sortBy', 'page', 'limit', 'populate']);
+
+//     // Set defaults for pagination options
+//     options.page = options.page || '1';
+//     options.limit = options.limit || '10';
+
+//     const allJobs: PaginateResult<IJob> = await jobService.getAllJobs(filters, options)
+
+//     const result = allJobs.results.map(job => ({
+//         ...job.toObject(),
+//         posted: calculateTimeAgo(job.createdAt),
+//     }));
+
+//     return sendResponse(res, {
+//         code: StatusCodes.OK,
+//         message: 'All jobs retrieved successfully.',
+//         data: result,
+
+
+//     });
+// });
 const getAllJobs = catchAsync(async (req: Request, res: Response) => {
-    const filters = pick(req.query, ["location", "category", "workPlace", "experienceLevel",]);
+    const filters = pick(req.query, ["location", "category", "workPlace", "experienceLevel"]);
     const options = pick(req.query, ['sortBy', 'page', 'limit', 'populate']);
 
     // Set defaults for pagination options
     options.page = options.page || '1';
     options.limit = options.limit || '10';
 
-    const allJobs: PaginateResult<IJob> = await jobService.getAllJobs(filters, options)
+    const allJobs: PaginateResult<IJob> = await jobService.getAllJobs(filters, options);
 
     const result = allJobs.results.map(job => ({
         ...job.toObject(),
         posted: calculateTimeAgo(job.createdAt),
+        expirationDate: new Intl.DateTimeFormat('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        }).format(job.expirationDate),
     }));
 
     return sendResponse(res, {
         code: StatusCodes.OK,
         message: 'All jobs retrieved successfully.',
         data: result,
-
-
     });
 });
+
+
+
 
 const recentJobs = catchAsync(async (req: Request, res: Response) => {
     const recentJobs = await jobService.recentJobs();
@@ -86,11 +118,14 @@ const getSingleJob = catchAsync(async (req: Request, res: Response): Promise<voi
     const id = req.params.id;
 
     const result = await jobService.getSingleJob(id);
+    if(!result){
+        throw new Error("single jon can't find")
+    }
 
     sendResponse(res, {
         code: StatusCodes.OK,
         message: 'Recent jobs retrieved successfully.',
-        data: result,
+        data: {result, posted: calculateTimeAgo(result.createdAt)}
     })
 
 

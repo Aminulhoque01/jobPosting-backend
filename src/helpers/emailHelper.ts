@@ -97,4 +97,4 @@ const sendResetPasswordEmail = async (to: string, otp: string) => {
   await sendEmail({ to, subject, html });
 };
 
-export { sendEmailVerification, sendResetPasswordEmail };
+export { sendEmailVerification, sendResetPasswordEmail,sendEmail };

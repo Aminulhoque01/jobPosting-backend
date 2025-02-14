@@ -45,6 +45,8 @@ jobSchema.pre('save', function (next) {
 // Add the `paginate` plugin
 jobSchema.plugin(paginate);
 
+
+
 // Export the model
 export const Job = model<IJob, JobModal>('JobModel', jobSchema);
 

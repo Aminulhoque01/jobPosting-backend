@@ -4,7 +4,11 @@ import paginate from '../plugins/paginate';
 
 const contactSchema = new Schema<IContact>(
   {
-    fullName: {
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName:{
       type: String,
       required: true,
     },
@@ -12,7 +16,7 @@ const contactSchema = new Schema<IContact>(
       type: String,
       required: true,
     },
-    phoneNumber: {
+    subject: {
       type: String,
       required: false,
     },

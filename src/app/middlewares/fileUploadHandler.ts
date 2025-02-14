@@ -73,7 +73,7 @@ import path from 'path';
 import fs from 'fs';
 import { Request } from 'express';
 
-export default function fileUploadHandler(UPLOADS_FOLDER: string) {
+export default function  fileUploadHandler(UPLOADS_FOLDER: string) {
   // Ensure the upload folder exists
   if (!fs.existsSync(UPLOADS_FOLDER)) {
     fs.mkdirSync(UPLOADS_FOLDER, { recursive: true });
