@@ -38,7 +38,7 @@ jobSchema.pre('save', function (next) {
         this.postedAt = calculateTimeAgo(this.createdAt || new Date());
     }
     if (!this.expirationDate) {
-        this.expirationDate = new Date(this.createdAt.getTime() + 2 * 30 * 24 * 60 * 60 * 1000); // Add 2 months
+        this.expirationDate = new Date(this.createdAt.getTime() + 1 * 30 * 24 * 60 * 60 * 1000); // Add 2 months
     }
     next();
 });

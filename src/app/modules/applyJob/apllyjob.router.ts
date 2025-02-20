@@ -11,7 +11,14 @@ const upload = fileUploadHandler(UPLOADS_FOLDER);
 
 const router= Router();
 
-router.post("/", auth("user"),   upload.single('resume'), applyJobController.applyJob );
+// router.post("/", auth("user"), upload.fields([{ name: 'resume', maxCount: 1 }, { name: 'coverLetter', maxCount: 1 }]), applyJobController.applyJob );
+router.post(
+    "/",
+    auth("user"),
+    upload.fields([{ name: "resume", maxCount: 1 }, { name: "coverLetter", maxCount: 1 }]),
+    applyJobController.applyJob
+);
+
 router.get("/my-apply", auth("user"), applyJobController.getUserAppliedJobs );
 
 router.get("/recentapply", auth("admin"), applyJobController.recentApplyedJob);

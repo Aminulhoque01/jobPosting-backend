@@ -7,8 +7,9 @@ import { request } from "express";
 import { TUser } from "../user/user.interface";
 import ApiError from "../../../errors/ApiError";
 
+
 const applyForJob = async (applicationData: Partial<IJobApplication>, userId: string): Promise<IJobApplication> => {
-    const { jobId, resume } = applicationData;
+    const { jobId, resume, coverLetter } = applicationData;
 
     const job = await Job.findById(jobId);
     if (!job) {
@@ -20,25 +21,21 @@ const applyForJob = async (applicationData: Partial<IJobApplication>, userId: st
         throw new Error("User not found");
     }
 
-    // Create the job application with the applicant (userId)
+    console.log("Resume Received:", resume); // Debugging
+    console.log("Cover Letter Received:", coverLetter); // Debugging
+
+    // Create job application
     const newApplication = await JobApplication.create({
         ...applicationData,
         resume, 
-        applicant: userId, // ✅ Ensure the user ID is stored
-    });
-
-    // Update user applied jobs
-    await User.findByIdAndUpdate(userId, {
-        $push: { appliedJobs: jobId },
-    });
-
-    // Update job applicants
-    await Job.findByIdAndUpdate(jobId, {
-        $push: { applicants: userId },
+        coverLetter, 
+        applicant: userId, 
     });
 
     return newApplication;
 };
+
+
 
 
 const getUserApplications = async (userId: string) => {
@@ -82,7 +79,7 @@ const creteReject = async (id: string) => {
 
 
 const getShortlist = async()=>{
-    const result = await JobApplication.find({ shortlisted: true }).populate("jobId","title company");
+    const result = await JobApplication.find({ shortlisted: true }).populate("jobId","title  company");
 
     return result
 }

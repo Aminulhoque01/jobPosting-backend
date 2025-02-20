@@ -23,6 +23,7 @@ const createJsob = catchAsync(async (req: Request, res: Response) => {
         employmentType: req.body.employmentType || "",  // ✅ Ensure it is captured
         workPlace: req.body.workPlace || "",  // ✅ Ensure it is captured
         experinceLavel: req.body.experinceLavel,
+        expirationDate: req.body.expirationDate,
         image: req.file ? `/uploads/users/${req.file.filename}` : null, 
     };
     
@@ -75,10 +76,11 @@ const getAllJobs = catchAsync(async (req: Request, res: Response) => {
     options.page = options.page || '1';
     options.limit = options.limit || '10';
 
+    // Ensure the query does not use `.lean()`
     const allJobs: PaginateResult<IJob> = await jobService.getAllJobs(filters, options);
 
     const result = allJobs.results.map(job => ({
-        ...job.toObject(),
+        ...job.toObject(),  // Ensure `job` is a Mongoose document
         posted: calculateTimeAgo(job.createdAt),
         expirationDate: new Intl.DateTimeFormat('en-US', { 
             year: 'numeric', 
@@ -97,12 +99,13 @@ const getAllJobs = catchAsync(async (req: Request, res: Response) => {
 
 
 
+
 const recentJobs = catchAsync(async (req: Request, res: Response) => {
     const recentJobs = await jobService.recentJobs();
 
 
     const result = recentJobs.map(job => ({
-        ...job,
+        ...job.toObject(),
         posted: calculateTimeAgo(job.createdAt),
     }));
 

@@ -6,13 +6,20 @@ import config from '../config';
 
 // Create Nodemailer transporter
 const transporter = nodemailer.createTransport({
+  // host: config.email.smtp.host,
+  // port: Number(config.email.smtp.port),
+  // secure: false, // true for 465, false for other ports
+  // auth: {
+  //   user: config.email.smtp.auth.user,
+  //   pass: config.email.smtp.auth.pass,
+  // },
+
   host: config.email.smtp.host,
   port: Number(config.email.smtp.port),
-  secure: false, // true for 465, false for other ports
   auth: {
     user: config.email.smtp.auth.user,
-    pass: config.email.smtp.auth.pass,
-  },
+    pass: config.email.smtp.auth.pass
+  }
 });
 
 // Verify transporter connection
@@ -29,6 +36,7 @@ if (config.env !== 'test') {
 
 // Function to send email
 const sendEmail = async (values: ISendEmail) => {
+  console.log(values)
   try {
     const info = await transporter.sendMail({
       from: `"${config.email.from}"`, // sender address

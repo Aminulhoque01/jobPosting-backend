@@ -9,25 +9,52 @@ import { JobApplication } from "./applyjob.model";
 
 
 
+// const applyJob = catchAsync(async (req: Request, res: Response) => {
+//     const { ...allyData } = req.body;
+//     console.log('Form Data:', allyData);
+
+//     // Capture the uploaded file
+//     if (req.file) {
+//         allyData.resume = req.file.filename; // Store file name or full path
+//     }
+//     if (req.file) {
+//         allyData.coverLetter = req.file.filename; // Store file name or full path
+//     }
+
+//     const userId = req.user.id;
+//     const jobApplication = await JobApplicationService.applyForJob(allyData, userId);
+
+
+//     sendResponse(res, {
+//         code: StatusCodes.OK,
+//         message: 'Job application submitted successfully.',
+//         data: {
+//             jobApplication
+//         },
+//     });
+// });
+
+
+
 const applyJob = catchAsync(async (req: Request, res: Response) => {
     const { ...allyData } = req.body;
     console.log('Form Data:', allyData);
+    console.log('Uploaded Files:', req.files); // Debugging
 
-    // Capture the uploaded file
-    if (req.file) {
-        allyData.resume = req.file.filename; // Store file name or full path
+    // Capture the uploaded files
+    if (req.files) {
+        const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+        allyData.resume = files.resume?.[0]?.filename || null;
+        allyData.coverLetter = files.coverLetter?.[0]?.filename || null;
     }
 
     const userId = req.user.id;
     const jobApplication = await JobApplicationService.applyForJob(allyData, userId);
 
-
     sendResponse(res, {
         code: StatusCodes.OK,
         message: 'Job application submitted successfully.',
-        data: {
-            jobApplication
-        },
+        data: { jobApplication },
     });
 });
 

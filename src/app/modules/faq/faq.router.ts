@@ -5,7 +5,7 @@ import { addFaq, editFaq, getFaqs, getFaqSingle, removeFaq } from "./faq.control
 const router = Router();
 
 router.post("/add", auth("admin"),addFaq);
-router.get("/faq", auth("admin"),getFaqs);
+router.get("/faq", getFaqs);
 router.get("/faq/:id", auth("admin"), getFaqSingle);
 router.patch("/faq/:id", auth("admin"), editFaq);
 router.delete("/faq/:id", auth("admin"), removeFaq);

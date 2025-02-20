@@ -8,6 +8,7 @@ const postSchema = new Schema<IBlog>(
       featureImage: { type: String },
       category: { type: String, },
       tag: { type: String,  },
+      status: { type: String, enum: ["Published", "Draft"] }
       
     },
     { timestamps: true }

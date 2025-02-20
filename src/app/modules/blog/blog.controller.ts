@@ -8,23 +8,52 @@ import moment from "moment";
 import { IBlog } from "./blog.interface";
 
 
+// const creteBlog = catchAsync(async (req: Request, res: Response) => {
+//     const { title, content, tag, category } = req.body;
+//     const featureImage = req.file ? `/uploads/users/${req.file.filename}` : undefined;
+//     const createdAt = new Date();
+//     const status = "draft"; // or any default status value
+//     const result = await BlogService.createBlog({ title, content, tag, category, featureImage, createdAt, status });
+
+//     // Format the createdAt field
+//     const formattedResult = {
+//         ...result.toObject(),
+//         createdAtFormatted: moment(result.createdAt).format("MMMM DD, yyyy") // Example: "February 03, 2025"
+//     };
+    
+//     sendResponse(res, {
+//         code: StatusCodes.OK,
+//         message: 'Recent jobs retrieved successfully.',
+//         data: formattedResult,
+//     })
+// });
+
+
 const creteBlog = catchAsync(async (req: Request, res: Response) => {
-    const { title, content, tag, category } = req.body;
+    const { title, content, tag, category, status } = req.body;
     const featureImage = req.file ? `/uploads/users/${req.file.filename}` : undefined;
     const createdAt = new Date();
-    const result = await BlogService.createBlog({ title, content, tag, category, featureImage, createdAt });
 
-    // Format the createdAt field
-    const formattedResult = {
-        ...result.toObject(),
-        createdAtFormatted: moment(result.createdAt).format("MMMM DD, yyyy") // Example: "February 03, 2025"
-    };
     
+   
+    const result = await BlogService.createBlog({ title, content, tag, category, featureImage, createdAt, status });
+
+  
+        
+    // Format the createdAt field
+    let formattedResult = null;
+    if (result) {
+        formattedResult = {
+            ...result.toObject(),
+            createdAtFormatted: moment(result.createdAt).format("MMMM DD, yyyy") // Example: "February 03, 2025"
+        };
+    }
+
     sendResponse(res, {
-        code: StatusCodes.OK,
-        message: 'Recent jobs retrieved successfully.',
+        code: StatusCodes.CREATED,
+        message: status === "publish" ? "Blog published successfully." : "Blog saved as draft.",
         data: formattedResult,
-    })
+    });
 });
 
 const getAllBlog = catchAsync(async (req: Request, res: Response) => {
@@ -36,6 +65,27 @@ const getAllBlog = catchAsync(async (req: Request, res: Response) => {
         data: result,
     })
 });
+
+const getAllPublishedData= catchAsync(async(req:Request,res:Response)=>{
+    const result = await BlogService.getAllPublishedData();
+
+    sendResponse(res,{
+        code:StatusCodes.OK,
+        message:'All Published data get',
+        data: result
+    })
+});
+
+const getAllDraftData = catchAsync(async(req:Request,res:Response)=>{
+
+    const result= await BlogService.getAllDraftData();
+
+    sendResponse(res,{
+        code:StatusCodes.OK,
+        message:'All Draft data get',
+        data: result
+    })
+})
 
 const getSingleBlog = catchAsync(async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -109,5 +159,7 @@ export const BlogController = {
     getAllBlog,
     getSingleBlog,
     updateBlog,
-    deleteBlog
+    deleteBlog,
+    getAllPublishedData,
+    getAllDraftData
 }
