@@ -136,7 +136,16 @@ const getSingleJob = catchAsync(async (req: Request, res: Response): Promise<voi
 
 
 
+const countCaregory= catchAsync(async(req: Request, res: Response) => {
+    const jobCounts = await jobService.countJobsByCategory();
 
+    sendResponse(res, {
+        code: StatusCodes.OK,
+        message: 'jobs COUNTS retrieved successfully.',
+        data: jobCounts,
+    })
+
+})
 
 
 
@@ -321,6 +330,7 @@ export const jobController = {
     deleteJob,
 
     JobApplicationMember,
-    totalJob
+    totalJob,
+    countCaregory
 }
 

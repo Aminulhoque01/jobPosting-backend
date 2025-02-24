@@ -30,6 +30,7 @@ router.delete("/delete-job/:id", auth("admin"), jobController.deleteJob);
 router.get("/application-user", auth("admin"), jobController.JobApplicationMember )
 
 router.get("/total-job", auth("admin"),jobController.totalJob )
+router.get("/count", jobController.countCaregory) 
 
 
 export const jobRoutes= router;

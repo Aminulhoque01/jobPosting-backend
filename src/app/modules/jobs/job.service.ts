@@ -140,6 +140,19 @@ const totalJob = async()=>{
     const total = await Job.countDocuments();
 
     return total
+};
+
+const countJobsByCategory=async()=>{
+    const total = await Job.aggregate([
+        {
+            $group: {
+                _id: "$category",
+                total: { $sum: 1 }
+            }
+        }
+    ]);
+
+    return total
 }
 
 
@@ -158,5 +171,6 @@ export const jobService = {
     
     JobApplicationMember,
     totalJob,
+    countJobsByCategory
     
 }
