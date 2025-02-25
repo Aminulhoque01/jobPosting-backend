@@ -8,7 +8,7 @@ const faqSchema = new Schema<IFaq>(
         category: { type: String },
         createdDate:{type:String}
     },
-    { timestamps: true } // Automatically add createdAt and updatedAt fields
+    { timestamps: true }  
 );
 
 // Create and export the FAQ model
