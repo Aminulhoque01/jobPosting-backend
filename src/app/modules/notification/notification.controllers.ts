@@ -3,6 +3,29 @@ import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
 import { NotificationService } from './notification.services';
+import { Request, Response } from 'express';
+
+const getNotification = catchAsync(async (req:Request, res:Response) => {
+  const notifications = await NotificationService.getAdminNotifications();
+  sendResponse(res, {
+    code: StatusCodes.OK,
+    data: notifications,
+    message: 'Notifications fetched successfully',
+  });
+})
+
+
+const marksNotificationRed= catchAsync(async(req:Request, res:Response)=>{
+  const { notificationId } = req.params;
+  const updatedNotification = await NotificationService.markAsRead(notificationId);
+
+  sendResponse(res, {
+    code: StatusCodes.OK,
+    data: updatedNotification,
+    message: 'Notifications red successfully',
+  });
+
+})
 
 const getALLNotification = catchAsync(async (req, res) => {
   const filters = pick(req.query, ['receiverId']);
@@ -20,19 +43,7 @@ const getALLNotification = catchAsync(async (req, res) => {
   });
 });
 
-const getAdminNotifications = catchAsync(async (req, res) => {
-  const filters = pick(req.query, ['receiverId']);
-  const options = pick(req.query, ['sortBy', 'limit', 'page']);
-  const result = await NotificationService.getAdminNotifications(
-    filters,
-    options
-  );
-  sendResponse(res, {
-    code: StatusCodes.OK,
-    data: result,
-    message: 'Admin Notifications fetched successfully',
-  });
-});
+
 
 const getSingleNotification = catchAsync(async (req, res) => {
   const { id } = req.params;
@@ -76,9 +87,11 @@ const clearAllNotification = catchAsync(async (req, res) => {
 
 export const NotificationController = {
   getALLNotification,
-  getAdminNotifications,
+   
   getSingleNotification,
   viewNotification,
   deleteNotification,
   clearAllNotification,
+  getNotification,
+  marksNotificationRed
 };

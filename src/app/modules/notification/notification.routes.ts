@@ -7,9 +7,13 @@ const router = Router();
 router
   .route('/clear-all-notifications')
   .delete(auth('common'), NotificationController.clearAllNotification);
-router
-  .route('/admin-notifications')
-  .get(auth('admin'), NotificationController.getAdminNotifications);
+
+// router.route('/admin-notifications').get(auth('admin'), NotificationController.getNotification);
+
+router.get('/notifications', auth("admin"), NotificationController.getNotification);
+router.patch('/admin/notifications/:notificationId/read', auth("admin"), NotificationController.marksNotificationRed);
+
+
 router
   .route('/')
   .get(auth('common'), NotificationController.getALLNotification);

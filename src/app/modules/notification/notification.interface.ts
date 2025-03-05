@@ -1,17 +1,12 @@
-import { Model, Types } from 'mongoose';
+import { Model, Schema, Types } from 'mongoose';
 import { PaginateOptions, PaginateResult } from '../../../types/paginate';
 
 export interface INotification {
-  _id?: Types.ObjectId;
-  receiverId?: Types.ObjectId | string;
-  title: string;
-  message?: string;
-  image?: object;
-  linkId?: Types.ObjectId | string;
-  role: 'admin' | 'technician' | 'company';
-  viewStatus?: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
+  user: Schema.Types.ObjectId;
+  job: Schema.Types.ObjectId;
+  message: string;
+  isRead: boolean;
+  createdAt: Date;
 }
 
 export interface INotificationModal extends Model<INotification> {

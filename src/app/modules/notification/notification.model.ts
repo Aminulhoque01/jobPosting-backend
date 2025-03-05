@@ -5,31 +5,11 @@ import paginate from '../plugins/paginate';
 
 const notificationModel = new Schema<INotification>(
   {
-    title: {
-      type: String,
-      required: [true, 'Title is required'],
-    },
-    message: {
-      type: String,
-      required: [true, 'Message is required'],
-    },
-    receiverId: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-      required: [false, 'User is required'],
-    },
-    role: {
-      type: String,
-      enum: roles,
-      required: true,
-    },
-    image: {
-      type: String,
-    },
-    linkId: {
-      type: String,
-    },
-    viewStatus: { type: Boolean, default: false },
+    user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    job: { type: Schema.Types.ObjectId, ref: 'JobModel', required: true },
+    message: { type: String, required: true },
+    isRead: { type: Boolean, default: false },
+    createdAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );

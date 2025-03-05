@@ -6,6 +6,36 @@ import { JobApplication } from "./applyjob.model";
 import { request } from "express";
 import { TUser } from "../user/user.interface";
 import ApiError from "../../../errors/ApiError";
+import { Notification } from "../notification/notification.model";
+
+
+// const applyForJob = async (applicationData: Partial<IJobApplication>, userId: string): Promise<IJobApplication> => {
+//     const { jobId, resume, coverLetter } = applicationData;
+
+//     const job = await Job.findById(jobId);
+//     if (!job) {
+//         throw new Error("Job not found");
+//     }
+
+//     const user = await User.findById(userId);
+//     if (!user) {
+//         throw new Error("User not found");
+//     }
+
+//     console.log("Resume Received:", resume); // Debugging
+//     console.log("Cover Letter Received:", coverLetter); // Debugging
+
+//     // Create job application
+//     const newApplication = await JobApplication.create({
+//         ...applicationData,
+//         resume, 
+//         coverLetter, 
+//         applicant: userId, 
+//     });
+
+//     return newApplication;
+// };
+
 
 
 const applyForJob = async (applicationData: Partial<IJobApplication>, userId: string): Promise<IJobApplication> => {
@@ -21,8 +51,8 @@ const applyForJob = async (applicationData: Partial<IJobApplication>, userId: st
         throw new Error("User not found");
     }
 
-    console.log("Resume Received:", resume); // Debugging
-    console.log("Cover Letter Received:", coverLetter); // Debugging
+    // console.log("Resume Received:", resume); // Debugging
+    // console.log("Cover Letter Received:", coverLetter); // Debugging
 
     // Create job application
     const newApplication = await JobApplication.create({
@@ -32,10 +62,16 @@ const applyForJob = async (applicationData: Partial<IJobApplication>, userId: st
         applicant: userId, 
     });
 
+    // ✅ Create a notification
+    await Notification.create({
+        user: userId,
+        job: jobId,
+        message: `${user.fullName} applied for the job: ${job.title}`,
+        isRead: false,
+    });
+
     return newApplication;
 };
-
-
 
 
 const getUserApplications = async (userId: string) => {

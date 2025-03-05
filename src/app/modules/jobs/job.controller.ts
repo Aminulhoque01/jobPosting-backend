@@ -9,6 +9,8 @@ import { calculateTimeAgo, Job, } from "./job.model";
 import { PaginateResult } from "../../../types/paginate";
 import { User } from "../user/user.model";
 import mongoose from "mongoose";
+import { JobApplication } from "../applyJob/applyjob.model";
+import { Notification } from "../notification/notification.model";
 
 const createJsob = catchAsync(async (req: Request, res: Response) => {
     
@@ -204,35 +206,84 @@ const deleteJob = catchAsync(async (req: Request, res: Response) => {
 })
 
 //apply for job
+// const applyForJob = catchAsync(async (req: Request, res: Response) => {
+//     const { jobId } = req.body; // Get jobId from the request
+//     const userId = req.user.id;
+
+//     const job = await Job.findById(jobId);
+//     const user = await User.findById(userId);
+//     if (!user) {
+//         throw new Error(' user not found');
+//     }
+//     if (!job) {
+//         throw new Error(' job not found');
+//     }
+//     if (user.appliedJobs.includes(jobId)) {
+//         throw new Error('You have already applied for this job');
+//     }
+//     user.appliedJobs.push(jobId);
+//     job.applicants.push(userId);
+
+//     await user.save();
+//     await job.save();
+
+//     const result = await jobService.applyForJob(jobId, userId);
+//     return sendResponse(res, {
+//         code: StatusCodes.OK,
+//         message: 'Job application submitted successfully.',
+//         data: result,
+//     });
+// });
+
+
+
 const applyForJob = catchAsync(async (req: Request, res: Response) => {
-    const { jobId } = req.body; // Get jobId from the request
-    const userId = req.user.id;
+    const { jobId } = req.body; 
+    const userId = req.user.id; 
 
     const job = await Job.findById(jobId);
     const user = await User.findById(userId);
-    if (!user) {
-        throw new Error(' user not found');
-    }
-    if (!job) {
-        throw new Error(' job not found');
-    }
-    if (user.appliedJobs.includes(jobId)) {
-        throw new Error('You have already applied for this job');
-    }
+
+    if (!user) throw new Error('User not found');
+    if (!job) throw new Error('Job not found');
+    
+    // Check if already applied
+    const alreadyApplied = await JobApplication.findOne({ user: userId, job: jobId });
+    if (alreadyApplied) throw new Error('You have already applied for this job');
+
+    // Create job application
+    const jobApplication = await JobApplication.create({ user: userId, job: jobId });
+
+    // Save the job application in user and job models
     user.appliedJobs.push(jobId);
     job.applicants.push(userId);
-
     await user.save();
     await job.save();
 
-    const result = await jobService.applyForJob(jobId, userId);
+    // Create a notification
+    try {
+
+       const notificatin =  await Notification.create({
+            user: userId,
+            job: jobId,
+            message: `Applied for the job: ${job.title}`,
+            isRead: false,
+        });
+
+
+        console.log(`Successfull`, notificatin)
+    
+    } catch (error) {
+        console.log(error)
+    }
+    
+
     return sendResponse(res, {
         code: StatusCodes.OK,
         message: 'Job application submitted successfully.',
-        data: result,
+        data: jobApplication,
     });
 });
-
 // save for job 
 
 const saveForJob = catchAsync(async (req: Request, res: Response) => {
@@ -242,7 +293,7 @@ const saveForJob = catchAsync(async (req: Request, res: Response) => {
     const job = await Job.findById(jobId);
 
     const result = await jobService.saveForJob(jobId, userId);
-    console.log(result)
+    // console.log(result)
     if (!user) {
         throw new Error('User not found');
     }

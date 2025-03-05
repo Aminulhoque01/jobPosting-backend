@@ -5,6 +5,18 @@ import { Notification } from './notification.model';
 import ApiError from '../../../errors/ApiError';
 import { User } from '../user/user.model';
 
+const getAdminNotifications = async () => {
+  return await Notification.find({ isRead: false }).populate({
+    path: 'user',  // Populate user details
+    select: 'fullName profileImage', // Select only necessary fields
+  })
+   
+}
+
+const markAsRead = async (notificationId: string) => {
+  return await Notification.findByIdAndUpdate(notificationId, { isRead: true }, { new: true });
+}
+
 const addNotification = async (
   payload: INotification
 ): Promise<INotification> => {
@@ -18,7 +30,7 @@ const getALLNotification = async (
   options: PaginateOptions,
   userId: string
 ) => {
-  filters.receiverId = userId;
+  userId;
   const unViewNotificationCount = await Notification.countDocuments({
     receiverId: userId,
     viewStatus: false,
@@ -28,13 +40,6 @@ const getALLNotification = async (
   return { ...result, unViewNotificationCount };
 };
 
-const getAdminNotifications = async (
-  filters: Partial<INotification>,
-  options: PaginateOptions
-): Promise<PaginateResult<INotification>> => {
-  filters.role = 'admin';
-  return Notification.paginate(filters, options);
-};
 
 const getSingleNotification = async (
   notificationId: string
@@ -46,31 +51,8 @@ const getSingleNotification = async (
   return result;
 };
 
-const addCustomNotification = async (
-  eventName: string,
-  notifications: INotification,
-  userId?: string
-) => {
-  const messageEvent = `${eventName}::${userId}`;
-  const result = await addNotification(notifications);
 
-  if (eventName === 'admin-notification' && notifications.role === 'admin') {
-    //@ts-ignore
-    io.emit('admin-notification', {
-      code: StatusCodes.OK,
-      message: 'New notification',
-      data: result,
-    });
-  } else {
-    //@ts-ignore
-    io.emit(messageEvent, {
-      code: StatusCodes.OK,
-      message: 'New notification',
-      data: result,
-    });
-  }
-  return result;
-};
+
 
 const viewNotification = async (notificationId: string) => {
   const result = await Notification.findByIdAndUpdate(
@@ -101,13 +83,16 @@ const clearAllNotification = async (userId: string) => {
   const result = await Notification.deleteMany({ receiverId: userId });
   return result;
 };
+
+
 export const NotificationService = {
   addNotification,
   getALLNotification,
   getAdminNotifications,
   getSingleNotification,
-  addCustomNotification,
+
   viewNotification,
   deleteNotification,
   clearAllNotification,
+  markAsRead,
 };

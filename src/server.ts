@@ -5,6 +5,7 @@ import app from './app';
 import config from './config';
 import { errorLogger, logger } from './shared/logger';
 import { socketHelper } from './app/socket/socket';
+import { Notification } from './app/modules/notification/notification.model';
 
 //uncaught exception
 process.on('uncaughtException', error => {
@@ -36,6 +37,7 @@ async function main() {
     socketHelper.socket(io);
     // @ts-ignore
     global.io = io;
+    
   } catch (error) {
     errorLogger.error(colors.red('🤢 Failed to connect Database'));
   }

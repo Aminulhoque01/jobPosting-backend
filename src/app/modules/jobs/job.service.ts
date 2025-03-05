@@ -4,26 +4,32 @@ import { User } from "../user/user.model";
 import { IJob } from "./job.interface";
 import { Job } from "./job.model";
 import { JobApplication } from "../applyJob/applyjob.model";
+import { Notification } from "../notification/notification.model";
+ // Adjust the path as necessary
 // import { JobModel } from "./job.module";
+
+
+
+
 
 const createJobs = async (jobData: string,): Promise<IJob> => {
     const result = await Job.create(jobData);
 
     return result;
-    
+
 };
 
 const getAllJobs = async (
     filters: Partial<IJob>,
     options: PaginateOptions
 ): Promise<PaginateResult<IJob>> => {
-    
+
 
     // Set default sort order if not provided
     options.sortBy = options.sortBy || '-createdAt';
 
     // Log sanitized filters and options for debugging
- 
+
 
     // Fetch data using pagination
     const paginatedJobs = await Job.paginate(filters, options);
@@ -52,16 +58,45 @@ const deleteJob = async (jobId: string) => {
     return job;
 };
 
-const applyForJob = async (jobId: string, userId: string): Promise<IJob | null> => {
-    const job = await Job.findById(jobId).populate('applicants', 'name email role');
-    // const job = await Job.findById(jobId);
-    if (!job) {
-        return null;
-    }
+    // const applyForJob = async (jobId: string, userId: string): Promise<IJob | null> => {
+    //     const job = await Job.findById(jobId).populate('applicants', 'name email role');
+    //     // const job = await Job.findById(jobId);
+    //     if (!job) {
+    //         return null;
+    //     }
+
+    //     await job.save();
+    //     return job;
+    // };
+
+const applyForJob = async (jobId: string, userId: string) => {
+    // Check if job exists
+    const job = await Job.findById(jobId);
+    if (!job) throw new Error('Job not found');
+
+    // Check if user exists
+    const user = await User.findById(userId);
+    if (!user) throw new Error('User not found');
+
+    // Check if user already applied
+    const alreadyApplied = await JobApplication.findOne({ user: userId, job: jobId });
+    if (alreadyApplied) throw new Error('You have already applied for this job');
+
+    // Create job application
+    const jobApplication = await JobApplication.create({ user: userId, job: jobId });
+
+    await Notification.create({
+        user: userId,
+        job: jobId,
+        message: `${user.fullName} applied for the job: ${job.title}`,
+        isRead: false,
+    });
     
-    await job.save();
-    return job;
-};
+
+    return jobApplication;
+}
+
+
 
 // save job to user
 
@@ -72,7 +107,7 @@ const saveForJob = async (jobId: string, userId: string) => {
     }
 
     // Check if the fullName field exists before updating
-   
+
 
     if (user.savedJobs.includes(new mongoose.Types.ObjectId(jobId))) {
         throw new Error("Job already saved");
@@ -106,12 +141,12 @@ const removeSavedJob = async (jobId: string, userId: string) => {
         savedJobId => savedJobId.toString() !== jobId
     );
     await user.save();
-    
+
 }
 
 
 
-const JobApplicationMember = async()=>{
+const JobApplicationMember = async () => {
     const jobApplications = await Job.aggregate([
         {
             $lookup: {
@@ -136,13 +171,13 @@ const JobApplicationMember = async()=>{
 // total job count 
 
 
-const totalJob = async()=>{
+const totalJob = async () => {
     const total = await Job.countDocuments();
 
     return total
 };
 
-const countJobsByCategory=async()=>{
+const countJobsByCategory = async () => {
     const total = await Job.aggregate([
         {
             $group: {
@@ -168,9 +203,9 @@ export const jobService = {
     getSavedJobs,
     removeSavedJob,
     deleteJob,
-    
+
     JobApplicationMember,
     totalJob,
     countJobsByCategory
-    
+
 }
