@@ -14,7 +14,7 @@ router.get("/all-jobs", jobController.getAllJobs);
 router.get("/single-job/:id", jobController.getSingleJob);
 router.get("/recent-jobs", jobController.recentJobs);
 
-router.post("/apply-job", auth("user"), jobController.applyForJob);
+ 
 
 
 

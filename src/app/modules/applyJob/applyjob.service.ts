@@ -66,7 +66,7 @@ const applyForJob = async (applicationData: Partial<IJobApplication>, userId: st
     await Notification.create({
         user: userId,
         job: jobId,
-        message: `${user.fullName} applied for the job: ${job.title}`,
+        message: `Applied for the job: ${job.title}`,
         isRead: false,
     });
 

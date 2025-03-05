@@ -58,44 +58,7 @@ const deleteJob = async (jobId: string) => {
     return job;
 };
 
-    // const applyForJob = async (jobId: string, userId: string): Promise<IJob | null> => {
-    //     const job = await Job.findById(jobId).populate('applicants', 'name email role');
-    //     // const job = await Job.findById(jobId);
-    //     if (!job) {
-    //         return null;
-    //     }
-
-    //     await job.save();
-    //     return job;
-    // };
-
-const applyForJob = async (jobId: string, userId: string) => {
-    // Check if job exists
-    const job = await Job.findById(jobId);
-    if (!job) throw new Error('Job not found');
-
-    // Check if user exists
-    const user = await User.findById(userId);
-    if (!user) throw new Error('User not found');
-
-    // Check if user already applied
-    const alreadyApplied = await JobApplication.findOne({ user: userId, job: jobId });
-    if (alreadyApplied) throw new Error('You have already applied for this job');
-
-    // Create job application
-    const jobApplication = await JobApplication.create({ user: userId, job: jobId });
-
-    await Notification.create({
-        user: userId,
-        job: jobId,
-        message: `${user.fullName} applied for the job: ${job.title}`,
-        isRead: false,
-    });
-    
-
-    return jobApplication;
-}
-
+ 
 
 
 // save job to user
@@ -198,7 +161,7 @@ export const jobService = {
     getSingleJob,
     recentJobs,
     updateJob,
-    applyForJob,
+     
     saveForJob,
     getSavedJobs,
     removeSavedJob,
