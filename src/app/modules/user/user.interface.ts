@@ -4,6 +4,7 @@ import { TUserStatus } from './user.constant';
 import { PaginateOptions, PaginateResult } from '../../../types/paginate';
 
 export type TUser = {
+  id: any;
   _id: Types.ObjectId;
   
   fullName?: string;

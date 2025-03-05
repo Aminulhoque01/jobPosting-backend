@@ -46,7 +46,7 @@ const getUserApplications = async (userId: string) => {
 
 
 const getAllApplicants = async()=>{
-    const jobs = await JobApplication.find().populate('applicant', 'fullName email profileImage').populate("jobId", "title company");
+    const jobs = await JobApplication.find().populate('applicant', 'fullName email profileImage').populate("jobId", "title company profileImage");
 
     // Collect all applicants (users who have applied for jobs)
     
@@ -113,6 +113,7 @@ const recentAppliedJob = async()=>{
                 _id: 1,
                 jobTitle: "$job.title", // Get the job title
                 userName: "$user.fullName", // Get the user name
+                profileImage: "$user.profileImage",
                 appliedDate: 1
             }
         },

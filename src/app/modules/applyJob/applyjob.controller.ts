@@ -72,7 +72,7 @@ const getUserAppliedJobs = catchAsync(async (req: Request, res: Response): Promi
 
     // Find the job applications of the user and populate job details
     const applications = await JobApplication.find({applicant:userId}).populate("jobId");
-    console.log(`asdasdasdasd `,applications);
+    // console.log(`asdasdasdasd `,applications);
 
 
 

@@ -95,7 +95,7 @@ export default {
     from: envVars.data.EMAIL_FROM,
   },
   mailchimp: {
-    apiKey: envVars.data.MAILCHIMP_API_KEY,
+    // apiKey: envVars.data.MAILCHIMP_API_KEY,
     server: 'us8',
   },
   titan: {
