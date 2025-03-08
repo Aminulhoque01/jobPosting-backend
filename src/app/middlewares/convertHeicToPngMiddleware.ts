@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import { promises as fs } from 'fs';
 import path from 'path';
 import convert from 'heic-convert';
-import { Express } from 'express';
 import ApiError from '../../errors/ApiError';
 import { StatusCodes } from 'http-status-codes';
 

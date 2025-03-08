@@ -3,10 +3,7 @@ import mongoose from 'mongoose';
 import { User } from "../user/user.model";
 import { IJob } from "./job.interface";
 import { Job } from "./job.model";
-import { JobApplication } from "../applyJob/applyjob.model";
-import { Notification } from "../notification/notification.model";
- // Adjust the path as necessary
-// import { JobModel } from "./job.module";
+ 
 
 
 
@@ -161,12 +158,10 @@ export const jobService = {
     getSingleJob,
     recentJobs,
     updateJob,
-     
     saveForJob,
     getSavedJobs,
     removeSavedJob,
     deleteJob,
-
     JobApplicationMember,
     totalJob,
     countJobsByCategory

@@ -9,8 +9,7 @@ import { calculateTimeAgo, Job, } from "./job.model";
 import { PaginateResult } from "../../../types/paginate";
 import { User } from "../user/user.model";
 import mongoose from "mongoose";
-import { JobApplication } from "../applyJob/applyjob.model";
-import { Notification } from "../notification/notification.model";
+ 
 
 const createJsob = catchAsync(async (req: Request, res: Response) => {
     
@@ -47,29 +46,6 @@ const createJsob = catchAsync(async (req: Request, res: Response) => {
 });
 
 
-// const getAllJobs = catchAsync(async (req: Request, res: Response) => {
-//     const filters = pick(req.query, ["location", "category", "workPlace", "experienceLevel",]);
-//     const options = pick(req.query, ['sortBy', 'page', 'limit', 'populate']);
-
-//     // Set defaults for pagination options
-//     options.page = options.page || '1';
-//     options.limit = options.limit || '10';
-
-//     const allJobs: PaginateResult<IJob> = await jobService.getAllJobs(filters, options)
-
-//     const result = allJobs.results.map(job => ({
-//         ...job.toObject(),
-//         posted: calculateTimeAgo(job.createdAt),
-//     }));
-
-//     return sendResponse(res, {
-//         code: StatusCodes.OK,
-//         message: 'All jobs retrieved successfully.',
-//         data: result,
-
-
-//     });
-// });
 const getAllJobs = catchAsync(async (req: Request, res: Response) => {
     const filters = pick(req.query, ["location", "category", "workPlace", "experienceLevel"]);
     const options = pick(req.query, ['sortBy', 'page', 'limit', 'populate']);
@@ -78,11 +54,11 @@ const getAllJobs = catchAsync(async (req: Request, res: Response) => {
     options.page = options.page || '1';
     options.limit = options.limit || '10';
 
-    // Ensure the query does not use `.lean()`
+    // If `.lean()` is used, the result is already a plain object
     const allJobs: PaginateResult<IJob> = await jobService.getAllJobs(filters, options);
 
     const result = allJobs.results.map(job => ({
-        ...job.toObject(),  // Ensure `job` is a Mongoose document
+        ...job.toObject(),  // No need for `.toObject()` when `.lean()` is used
         posted: calculateTimeAgo(job.createdAt),
         expirationDate: new Intl.DateTimeFormat('en-US', { 
             year: 'numeric', 

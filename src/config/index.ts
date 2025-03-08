@@ -108,3 +108,15 @@ export default {
     webhookSecret: envVars.data.STRIPE_WEBHOOK_SECRET,
   },
 };
+
+export interface MailchimpConfig {
+  apiKey: string;
+  server: string;
+}
+
+export const config = {
+  mailchimp: {
+    apiKey: 'your-api-key',
+    server: 'your-server'
+  }
+};

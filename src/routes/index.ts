@@ -5,9 +5,6 @@ import { ContactRoutes } from '../app/modules/contact/contact.routes';
 import { SettingsRoutes } from '../app/modules/settings/settings.routes';
 import { UserRoutes } from '../app/modules/user/user.route';
 import { NotificationRoutes } from '../app/modules/notification/notification.routes';
-
-import { clientRoute } from '../app/modules/client/client.route';
-
 import { jobRoutes } from '../app/modules/jobs/job.router';
 import { applicaitonJobRoutes } from '../app/modules/applyJob/apllyjob.router';
 import { BlogRoutes } from '../app/modules/blog/blog.route';

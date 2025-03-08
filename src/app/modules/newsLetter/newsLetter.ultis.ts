@@ -1,9 +1,11 @@
 import mailchimp from '@mailchimp/mailchimp_marketing';
-import config from '../../../config';
+import { config, MailchimpConfig } from '../../../config';
+
+const mailchimpConfig: MailchimpConfig = config.mailchimp;
 
 mailchimp.setConfig({
-  apiKey: config.mailchimp.apiKey as string,
-  server: config.mailchimp.server,
+  apiKey: mailchimpConfig.apiKey,
+  server: mailchimpConfig.server,
 });
 
 export default mailchimp;

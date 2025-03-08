@@ -2,6 +2,7 @@ import { Model } from "mongoose";
 import { PaginateOptions, PaginateResult } from "../../../types/paginate";
 
 export interface IJob {
+    toObject(): any;
     title: string;
     salary: string;
     company: string;
