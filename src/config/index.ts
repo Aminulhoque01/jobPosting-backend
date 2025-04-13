@@ -208,7 +208,7 @@ export default {
   email: {
     smtp: {
       host: envVars.data.SMTP_HOST,
-      port: envVars.data.SMTP_PORT,
+      port: parseInt(envVars.data.SMTP_PORT || '587'),
       auth: {
         user: envVars.data.SMTP_USERNAME,
         pass: envVars.data.SMTP_PASSWORD,
