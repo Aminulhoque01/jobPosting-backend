@@ -67,7 +67,7 @@ if (!envVars.success) {
 
 export default {
   env: envVars.data.NODE_ENV,
-  port: envVars.data.PORT,
+  port: envVars.data.PORT || '0.0.0.0',
   socket_port: envVars.data.SOCKET,
   mongoose: {
     url: envVars.data.MONGODB_URL,
@@ -120,3 +120,4 @@ export const config = {
     server: 'your-server'
   }
 };
+
