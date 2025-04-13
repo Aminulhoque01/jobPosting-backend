@@ -3,13 +3,13 @@ import mongoose from 'mongoose';
 import { Server } from 'socket.io';
 import app from './app';
 import config from './config';
-import { errorLogger, logger } from './shared/logger';
+// import { errorLogger, logger } from './shared/logger';
 import { socketHelper } from './app/socket/socket';
 
 
 //uncaught exception
 process.on('uncaughtException', error => {
-  errorLogger.error('UnhandleException Detected', error);
+  console.log('UnhandleException Detected', error);
   process.exit(1);
 });
 
@@ -17,11 +17,11 @@ let server: any;
 async function main() {
   try {
     mongoose.connect(config.mongoose.url as string);
-    logger.info(colors.green('🚀 Database connected successfully'));
+    console.log(colors.green('🚀 Database connected successfully'));
     const port =
       typeof config.port === 'number' ? config.port : Number(config.port);
     server = app.listen(port, config.backendIp as string, () => {
-      logger.info(
+      console.log(
         colors.yellow(
           `♻️  Application listening on port http://${config.backendIp}:${port}`
         )
@@ -39,14 +39,14 @@ async function main() {
     global.io = io;
     
   } catch (error) {
-    errorLogger.error(colors.red('🤢 Failed to connect Database'));
+    console.log(colors.red('🤢 Failed to connect Database'));
   }
 
   //handle unhandledRejection
   process.on('unhandledRejection', error => {
     if (server) {
       server.close(() => {
-        errorLogger.error('UnhandledRejection Detected', error);
+        console.log('UnhandledRejection Detected', error);
         process.exit(1);
       });
     } else {
@@ -59,7 +59,7 @@ main();
 
 //SIGTERM
 process.on('SIGTERM', () => {
-  logger.info('SIGTERM IS RECEIVE');
+  console.log('SIGTERM IS RECEIVE');
   if (server) {
     server.close();
   }

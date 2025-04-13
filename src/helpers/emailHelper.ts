@@ -1,6 +1,6 @@
 import colors from 'colors';
 import nodemailer from 'nodemailer';
-import { errorLogger, logger } from '../shared/logger';
+// import { errorLogger, logger } from '../shared/logger';
 import { ISendEmail } from '../types/email';
 import config from '../config';
 
@@ -26,9 +26,9 @@ const transporter = nodemailer.createTransport({
 if (config.env !== 'test') {
   transporter
     .verify()
-    .then(() => logger.info(colors.cyan('📧  Connected to email server')))
+    .then(() => console.log(colors.cyan('📧  Connected to email server')))
     .catch(err =>
-      logger.warn(
+      console.error(
         'Unable to connect to email server. Make sure you have configured the SMTP options in .env'
       )
     );
@@ -44,9 +44,9 @@ const sendEmail = async (values: ISendEmail) => {
       subject: values.subject, // subject line
       html: values.html, // html body
     });
-    logger.info('Mail sent successfully', info.accepted);
+    console.log('Mail sent successfully', info.accepted);
   } catch (error) {
-    errorLogger.error('Email', error);
+    console.log('Email', error);
   }
 };
 
