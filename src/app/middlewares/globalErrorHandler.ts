@@ -4,14 +4,14 @@ import ApiError from '../../errors/ApiError';
 import handleValidationError from '../../errors/handleValidationError';
 import handleZodError from '../../errors/handleZodError';
 import handleDuplicateError from '../../errors/handleDuplicateError';
-// import { errorLogger } from '../../shared/logger';
+import { errorLogger } from '../../shared/logger';
 import { IErrorMessage } from '../../types/errors.types';
 
 const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   // Log error
   config.env === 'development'
-    ? console.log('🚨 globalErrorHandler ~~ ', error)
-    : console.log('🚨 globalErrorHandler ~~ ', error);
+    ? errorLogger.error('🚨 globalErrorHandler ~~ ', error)
+    : errorLogger.error('🚨 globalErrorHandler ~~ ', error);
 
   let code = 500;
   let message = 'Something went wrong';
