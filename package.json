@@ -2,7 +2,9 @@
   "name": "job-posting",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "engines": {
+    "node": ">=16"
+  },
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
