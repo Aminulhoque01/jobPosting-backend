@@ -1,115 +1,74 @@
-# Project Name
+Project Nmae: Job-posting-backend
 
-This is a template project for backend development using Typescript, Node.js, Express, Mongoose, Bcrypt, JWT, NodeMailer, Multer, ESLint, and Prettier. The aim is to reduce setup time for new backend projects.
+This is NoSQL mongodb database used: mongoose typescript project.
 
-## Features
+Auth routes
+user register: http://localhost:5000/api/v1/auth/register
+emil verify: http://localhost:5000/api/v1/auth/verify-email
+user login: http://localhost:5000/api/v1/auth/login
+forget-password: http://localhost:5000/api/v1/auth/forgot-password
+resend-otp: http://localhost:5000/api/v1/auth/resend-otp
+reset-password: http://localhost:5000/api/v1/auth/reset-password
+refacetoken   : http://localhost:5000/api/v1/auth/refresh-token
+change-password   : http://localhost:5000/api/v1/auth/change-password
 
-- **Authentication API:** Complete authentication system using JWT for secure token-based authentication and bcrypt for password hashing.
-- **File Upload:** Implemented using Multer with efficient file handling and short-term storage.
-- **Data Validation:** Robust data validation using Zod and Mongoose schemas.
-- **Code Quality:** Ensured code readability and quality with ESLint and Prettier.
-- **Email Service:** Sending emails through NodeMailer.
-- **File Handling:** Efficient file deletion using `fs.unlink`.
-- **Environment Configuration:** Easy configuration using a `.env` file.
-- **Logging:** Logging with Winston and file rotation using DailyRotateFile.
-- **API Request Logging:** Logging API requests using Morgan.
 
-## Tech Stack
 
-- Typescript
-- Node.js
-- Express
-- Mongoose
-- Bcrypt
-- JWT
-- NodeMailer
-- Multer
-- ESLint
-- Prettier
-- Winston
-- Daily-winston-rotate-file
-- Morgen
-- Socket
+Admin routes,
+create-job: http://localhost:5000/api/v1/job/create-job (POST)
+update-job: http://localhost:5000/api/v1/job/update-job/67a5ce61df3360fd34a691a1 (PATCH)
+delete-job: http://localhost:5000/api/v1/job/delete-job/67d8419db55dc3ae9222ed22 (DELETE)
 
-## Getting Started
+how much user apply -job: http://localhost:5000/api/v1/job/apply/applied-user (GET)
+Apply-usercount: http://localhost:5000/api/v1/job/application-user (GET)
+RECENT-Apply-user: http://localhost:5000/api/v1/apply/recentapply (GET)
+Total-application: http://localhost:5000/api/v1/apply/total-applicaiton(GET)
+Total-job: http://localhost:5000/api/v1/job/total-job (GET)
+Create-shortlist-user: http://localhost:5000/api/v1/apply/shorlist/67a1c80f89fd3cf65ce6786b (POST)
+ALL-shortlist user: http://localhost:5000/api/v1/apply/shorlist (GET);
+Total-shortlist-count: http://localhost:5000/api/v1/apply/totla-sh(GET)orlist
+Reject-apply-user: http://localhost:5000/api/v1/apply/reject/67a1c9108dee5e047eb030f0(POST);
+admin-one click all subscription email send mail: http://localhost:5000/api/v1/newsletter/send-newsletter-message (post)(paid-verson) 
+{
+    "subject":"TODAY latest-job",
+    "content":"all news get anytime search -today job"
+}
 
-Follow these steps to set up and run the project locally.
+how much user apply job-notification: http://localhost:5000/api/v1/notifications/notifications (GET)
 
-### Prerequisites
+user-contact:http://localhost:5000/api/v1/contact/get-message (GET)
 
-Ensure you have the following installed:
+ADMIN-BLOG
+CREATE-BLOG: http://localhost:5000/api/v1/blog/post-blog (POST) {FORM-DATA}
+UPDATE-BLOG: http://localhost:5000/api/v1/blog/update-blog/67a6b8312ec6ba5e8825023c (PATCH)
+DELETE-BLOG: http://localhost:5000/api/v1/blog/679dc553172039b3f84824b1
+GET-published-blog: http://localhost:5000/api/v1/blog/published
+GET-Draft-blog: http://localhost:5000/api/v1/log/draft (get)
 
-- Node.js
-- npm or yarn
+faq
+add-faq: http://localhost:5000/api/v1/faq/add(POST)
+UPDATED: http://localhost:5000/api/v1/faq/faq/67a6fcdd91f33e2343018a16(PATCH)
+DELETE: http://localhost:5000/api/v1/faq/faq/67a6fcdd91f33e2343018a16(DELETE)
 
-### Installation
 
-1. **Clone the repository:**
 
-   ```bash
-   git clone https://github.com/yourusername/your-repository.git
-   cd your-repository
-   ```
 
-2. **Install dependencies:**
+User routes,
+user-upload-his-profile-image: http://localhost:5000/api/v1/user/profile-image (POST)
+user get-profie: http://localhost:5000/api/v1/user/profile
+Get-all-jobs: http://localhost:5000/api/v1/job/all-jobs (GET)
+single-job: http://localhost:5000/api/v1/job/single-job/679ca8d166262e6023b3401d
+user-save-any job: http://localhost:5000/api/v1/job/save-job (POST) BODY: {"jobId":"679b0edb2ab71cfc8cfc6b65"}
+Get- User-all-save-job: http://localhost:5000/api/v1/job/saved-jobs (GET)
+REMOVE-JOB: http://localhost:5000/api/v1/job/remove-saved-job (delete)
 
-   Using npm:
+user-apply-job:http://localhost:5000/api/v1/apply(POST) [fom data]
+Get-applyed job: http://localhost:5000/api/v1/apply/my-apply(Get)
 
-   ```bash
-   npm install
-   ```
+User-email-subscription-newletter:http://localhost:5000/api/v1/newsletter/ (POST) BODY:{"email":"genapax151@bankrau.com"}
+get-faq: http://localhost:5000/api/v1/faq/faq (GET)
+SINGLE-FAQ: /faq/faq/67a6fcdd91f33e2343018a16(GET)
 
-   Using yarn:
+GET-ALL-BLOG: http://localhost:5000/api/v1/blog
+SINGLE-BLOG: http://localhost:5000/blog/67affb2b23b4d8b276e58ca7
 
-   ```bash
-   yarn install
-   ```
-
-3. **Create a `.env` file:**
-
-   In the root directory of the project, create a `.env` file and add the following variables. Adjust the values according to your setup.
-
-   ```env
-   # Basic
-   NODE_ENV=development
-   DATABASE_URL=mongodb://127.0.0.1:27017/project_name
-   IP_ADDRESS=192.0.0.0
-   PORT=5000
-
-   # Bcrypt
-   BCRYPT_SALT_ROUNDS=12
-
-   # JWT
-   JWT_SECRET=jwt_secret
-   JWT_EXPIRE_IN=1d
-
-   # Email
-   EMAIL_FROM=email@gmail.com
-   EMAIL_USER=email@gmail.com
-   EMAIL_PASS=mkqcfjeqloothyax
-   EMAIL_PORT=587
-   EMAIL_HOST=smtp.gmail.com
-   ```
-
-4. **Run the project:**
-
-   Using npm:
-
-   ```bash
-   npm run dev
-   ```
-
-   Using yarn:
-
-   ```bash
-   yarn run dev
-   ```
-
-### Running the Tests
-
-Explain how to run the automated tests for this system.
-
-```bash
-npm test
-```
-# Thera-Track-Backend
